@@ -167,8 +167,26 @@ jobs:
                   print(f"Appended missing \\\\end{{document}} in {tex}")
 
               # Bibliography safety: add a references block if none exists.
+              # If a numbered bibliography exists, replace it with the APA-style block.
+              numeric_biblio = re.search(
+                  r"\n\\section\*?\{References\}\s*\n\\begin\{thebibliography\}.*?\\end\{thebibliography\}",
+                  new_text,
+                  flags=re.IGNORECASE | re.DOTALL,
+              )
+              if numeric_biblio:
+                  new_text = (
+                      new_text[:numeric_biblio.start()]
+                      + "\n\n"
+                      + refs_block
+                      + "\n\n"
+                      + new_text[numeric_biblio.end():]
+                  )
+                  print(f"Replaced numbered bibliography with APA-style references in {tex}")
+
               has_biblio = any(
                   token in new_text for token in (
+                      "\\section*{References}",
+                      "\\section{References}",
                       "\\begin{thebibliography}",
                       "\\printbibliography",
                       "\\bibliography{",
