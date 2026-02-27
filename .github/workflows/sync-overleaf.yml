@@ -65,6 +65,8 @@ jobs:
           marker = r"\section{Question 3: FILL IN}"
           replacement_path = Path("templates/question3_section.tex")
           replacement = replacement_path.read_text(encoding="utf-8")
+          q4_restore_path = Path("templates/question4_restore.tex")
+          q4_restore = q4_restore_path.read_text(encoding="utf-8")
 
           tex_files = sorted(Path("overleaf_project").rglob("*.tex"))
           replaced = []
@@ -115,6 +117,39 @@ jobs:
               if new_text != text:
                   tex.write_text(new_text, encoding="utf-8")
                   replaced.append(str(tex))
+
+              # Safety restore: if Q3 exists but Q4 is missing, insert Q4 block.
+              has_q3 = re.search(
+                  r"\\section\{[^}]*Question\s*\(?3\)?[^}]*\}",
+                  new_text,
+                  flags=re.IGNORECASE,
+              ) is not None
+              has_q4 = re.search(
+                  r"\\section\{[^}]*Question\s*\(?4\)?[^}]*\}|\\subsection\{4\.1",
+                  new_text,
+                  flags=re.IGNORECASE,
+              ) is not None
+
+              if has_q3 and not has_q4:
+                  insert_pos = len(new_text)
+                  for pat in (
+                      r"\n\\section\{References",
+                      r"\n\\section\{Bibliography",
+                      r"\n\\printbibliography",
+                      r"\n\\bibliography\{",
+                      r"\n\\end\{document\}",
+                  ):
+                      m = re.search(pat, new_text, flags=re.IGNORECASE)
+                      if m:
+                          insert_pos = m.start()
+                          break
+                  restored = new_text[:insert_pos] + "\n\n" + q4_restore + "\n\n" + new_text[insert_pos:]
+                  if restored != new_text:
+                      tex.write_text(restored, encoding="utf-8")
+                      if str(tex) not in replaced:
+                          replaced.append(str(tex))
+                      print(f"Restored Question 4 in {tex}")
+                      new_text = restored
 
           if replaced:
               print("Updated files:")

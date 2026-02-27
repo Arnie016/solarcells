@@ -1,0 +1,17 @@
+\section{Question 4}
+
+\subsection{4.1 EQE loss mechanisms}
+In descending order of significance (for the tested cell, especially in the longer wavelengths transmitted by the perovskite top cell):
+\begin{enumerate}
+\item \textbf{Base collection loss:} This combines limited minority-carrier diffusion range and recombination losses in the base region. Because carriers have finite lifetime and diffusion coefficient, not all generated carriers are collected before recombining. Additional recombination can occur at defects and interface states. This contribution is especially significant around $\sim$1000 nm.
+\item \textbf{NIR parasitic absorption:} At longer wavelengths, back-surface optical behavior and parasitic pathways become more dominant; beyond roughly 1050 nm, transmitted or parasitically absorbed light contributes strongly to current loss.
+\item \textbf{Front surface escape:} Photons that were back-reflected or scattered may still escape from the front surface rather than being re-absorbed, and this mechanism becomes stronger near the long-wavelength end of the measured spectrum.
+\item \textbf{ARC reflectance:} Reflection at the front interface due to anti-reflection coating (ARC) mismatch contributes to optical loss, with stronger impact in the short-wavelength (UV) region.
+\item \textbf{Blue loss:} This includes front-region recombination effects and ARC-related absorption/mismatch away from optimal design wavelength, and is most visible toward the UV side where absorption depth is shallow.
+\end{enumerate}
+
+\subsection{4.2 EQE differences in regions with different surface properties}
+Region 1 is a textured surface with thicker nitride ARC and is used as the reference. Region 2 is also textured but has a thinner ARC; it tends to improve shorter-wavelength response while reducing near-IR performance, consistent with ARC thickness tuning effects. Region 3 is polished (non-textured), which degrades UV-side performance due to increased optical losses and weaker light trapping, while the near-IR difference versus Region 1 is smaller than in the UV-visible range.
+
+\subsection{4.3 Suitability for perovskite-silicon solar cell}
+For bottom-cell suitability in perovskite-silicon tandem architecture, response above 700 nm is the key metric. In the truncated range, Region 1 gives the strongest performance and the most consistent near-IR response, while Region 2 is least suitable because its relative strength is shifted toward shorter wavelengths that are largely filtered by the top perovskite layer. Region 3 can be attractive from fabrication simplicity, but Region 1 remains the strongest spectral performer in the tandem-relevant window.
