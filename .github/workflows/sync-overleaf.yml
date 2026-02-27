@@ -206,6 +206,21 @@ jobs:
                       )
                       print(f"Inserted bibliography block in {tex}")
 
+              # Cleanup: if multiple References sections exist, keep only the first.
+              ref_heads = list(
+                  re.finditer(r"\n\\section\*?\{References\}", new_text, flags=re.IGNORECASE)
+              )
+              if len(ref_heads) > 1:
+                  for m in reversed(ref_heads[1:]):
+                      tail = new_text[m.end():]
+                      end_m = re.search(r"\n\\section\{|\\end\{document\}", tail, flags=re.IGNORECASE)
+                      if end_m:
+                          end_pos = m.end() + end_m.start()
+                      else:
+                          end_pos = len(new_text)
+                      new_text = new_text[:m.start()] + "\n" + new_text[end_pos:]
+                  print(f"Removed duplicate References section(s) in {tex}")
+
               if new_text != text:
                   tex.write_text(new_text, encoding="utf-8")
                   replaced.append(str(tex))
