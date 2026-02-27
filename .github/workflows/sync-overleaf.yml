@@ -67,6 +67,8 @@ jobs:
           replacement = replacement_path.read_text(encoding="utf-8")
           q4_restore_path = Path("templates/question4_restore.tex")
           q4_restore = q4_restore_path.read_text(encoding="utf-8")
+          refs_path = Path("templates/references_block.tex")
+          refs_block = refs_path.read_text(encoding="utf-8")
 
           tex_files = sorted(Path("overleaf_project").rglob("*.tex"))
           replaced = []
@@ -163,6 +165,28 @@ jobs:
               if "\\begin{document}" in new_text and "\\end{document}" not in new_text:
                   new_text = new_text.rstrip() + "\n\n\\end{document}\n"
                   print(f"Appended missing \\\\end{{document}} in {tex}")
+
+              # Bibliography safety: add a references block if none exists.
+              has_biblio = any(
+                  token in new_text for token in (
+                      "\\begin{thebibliography}",
+                      "\\printbibliography",
+                      "\\bibliography{",
+                      "\\addbibresource{",
+                  )
+              )
+              if "\\begin{document}" in new_text and not has_biblio:
+                  end_doc = re.search(r"\n\\end\{document\}", new_text)
+                  if end_doc:
+                      insert_pos = end_doc.start()
+                      new_text = (
+                          new_text[:insert_pos]
+                          + "\n\n"
+                          + refs_block
+                          + "\n\n"
+                          + new_text[insert_pos:]
+                      )
+                      print(f"Inserted bibliography block in {tex}")
 
               if new_text != text:
                   tex.write_text(new_text, encoding="utf-8")
