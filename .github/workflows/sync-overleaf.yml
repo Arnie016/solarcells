@@ -80,11 +80,35 @@ jobs:
                   section_match = re.search(r"\\section\{Question\s*3:[^}]*\}", new_text)
                   if section_match:
                       start = section_match.start()
-                      next_section = re.search(r"\n\\section\{", new_text[section_match.end():])
-                      if next_section:
-                          end = section_match.end() + next_section.start()
+                      tail = new_text[section_match.end():]
+
+                      # Preferred hard boundaries so Question 4 is always preserved.
+                      boundary_patterns = [
+                          r"\n\\section\{Question\s*\(?4\)?",
+                          r"\n\\section\{[^}]*Question\s*\(?4\)?",
+                          r"\n\\subsection\{4\.1",
+                          r"\n\\subsection\{Question\s*\(?4\)?",
+                      ]
+
+                      boundary_positions = []
+                      for pat in boundary_patterns:
+                          m = re.search(pat, tail, flags=re.IGNORECASE)
+                          if m:
+                              boundary_positions.append(m.start())
+
+                      if boundary_positions:
+                          end = section_match.end() + min(boundary_positions)
                       else:
-                          end = len(new_text)
+                          # Fallback to next section only if no explicit Q4 marker exists.
+                          next_section = re.search(r"\n\\section\{", tail)
+                          if next_section:
+                              end = section_match.end() + next_section.start()
+                          else:
+                              # Do not risk deleting trailing content if boundary is unknown.
+                              raise SystemExit(
+                                  f"Question 3 boundary not found safely in {tex}. "
+                                  "Refusing to overwrite to avoid deleting later sections."
+                              )
                       new_text = new_text[:start] + replacement + "\n" + new_text[end:]
 
               if new_text != text:
