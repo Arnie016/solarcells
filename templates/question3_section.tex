@@ -1,0 +1,39 @@
+\section{Question 3: Experimental Results and Discussion}
+
+\subsection{Integrated short-circuit current density from EQE}
+The integrated short-circuit current density, $J_{sc}$, was obtained from the measured EQE spectra (300--1200 nm, 10 nm step) using the spreadsheet integral output.
+
+\begin{table}[h]
+\centering
+\caption{Integrated current density extracted from EQE data.}
+\begin{tabular}{lccc}
+\hline
+Region & $J_{sc}$ from EQE (mA/cm$^2$) & Truncated $J_{sc}$ (700--1200 nm) (mA/cm$^2$) & Reduction (\%) \\
+\hline
+R1 & 37.7605 & 17.9600 & 52.44 \\
+R2 & 36.0073 & 16.3192 & 54.68 \\
+R3 & 34.6822 & 17.0999 & 50.70 \\
+\hline
+\end{tabular}
+\label{tab:q3_jsc}
+\end{table}
+
+From full-spectrum integration, the ranking is R1 $>$ R2 $>$ R3. From truncated (700+ nm) integration, the ranking is R1 $>$ R3 $>$ R2.
+
+\subsection{Spectral response (SR) and EQE results}
+Without the 700 nm long-pass filter, all three regions show strong response across visible to near-IR wavelengths, followed by roll-off near 1000--1200 nm. With the 700 nm long-pass filter, response below 700 nm is suppressed, so the measured response represents bottom silicon subcell behavior in the tandem-relevant range.
+
+Region R1 shows the strongest near-IR response (at 900 nm: EQE $\approx 87.09\%$, SR $\approx 0.632$ A/W), consistent with the highest integrated $J_{sc}$. Region R2 is lower in the 800--1100 nm range (at 900 nm: EQE $\approx 79.08\%$, SR $\approx 0.574$ A/W), resulting in lower integrated current. Region R3 is below R1 in full-spectrum response but slightly above R2 in the truncated case.
+
+\subsection{Reflectance results and correlation with SR/EQE}
+Reflectance trends are consistent with the SR/EQE behavior. Mean reflectance over 300--1100 nm is 3.80\% (R1), 4.23\% (R2), and 9.27\% (R3). R3 shows substantially higher reflectance over broad wavelength ranges, especially in the blue and near-IR, which reduces effective absorption and carrier generation.
+
+Selected reflectance values are:
+\begin{itemize}
+\item 700 nm: R1 = 1.69\%, R2 = 1.98\%, R3 = 0.69\%
+\item 900 nm: R1 = 3.30\%, R2 = 3.69\%, R3 = 6.22\%
+\item 1100 nm: R1 = 20.50\%, R2 = 20.09\%, R3 = 26.09\%
+\end{itemize}
+
+\subsection{Summary}
+Based on measured SR, EQE, and reflectance data, Region R1 provides the strongest spectral current generation performance in this experiment and gives the highest integrated $J_{sc}$ for both full-spectrum and tandem-relevant (700--1200 nm) analysis.
