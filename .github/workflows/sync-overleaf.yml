@@ -1,0 +1,58 @@
+name: Sync to Overleaf
+
+on:
+  push:
+    branches:
+      - main
+      - master
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: overleaf-sync
+  cancel-in-progress: true
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate required secrets
+        env:
+          OVERLEAF_PROJECT_ID: ${{ secrets.OVERLEAF_PROJECT_ID }}
+          OVERLEAF_TOKEN: ${{ secrets.OVERLEAF_TOKEN }}
+        run: |
+          if [ -z "$OVERLEAF_PROJECT_ID" ] || [ -z "$OVERLEAF_TOKEN" ]; then
+            echo "Missing OVERLEAF_PROJECT_ID or OVERLEAF_TOKEN secret."
+            exit 1
+          fi
+
+      - name: Configure git identity
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Push current commit to Overleaf
+        env:
+          OVERLEAF_PROJECT_ID: ${{ secrets.OVERLEAF_PROJECT_ID }}
+          OVERLEAF_TOKEN: ${{ secrets.OVERLEAF_TOKEN }}
+        run: |
+          cat > askpass.sh << 'EOF'
+          #!/usr/bin/env sh
+          printf '%s\n' "$OVERLEAF_TOKEN"
+          EOF
+          chmod 700 askpass.sh
+
+          export GIT_ASKPASS="$PWD/askpass.sh"
+          export GIT_TERMINAL_PROMPT=0
+
+          git remote add overleaf "https://git@git.overleaf.com/${OVERLEAF_PROJECT_ID}"
+          git push overleaf HEAD:master
+
+          rm -f askpass.sh
