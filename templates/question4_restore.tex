@@ -1,17 +1,30 @@
 \section{Question 4}
 
 \subsection{4.1 EQE loss mechanisms}
-In descending order of significance (for the tested cell, especially in the longer wavelengths transmitted by the perovskite top cell):
+In descending order of significance (in the cell under test, specifically at the longer wavelengths that the perovskite cell allows through):
 \begin{enumerate}
-\item \textbf{Base collection loss:} This combines limited minority-carrier diffusion range and recombination losses in the base region. Because carriers have finite lifetime and diffusion coefficient, not all generated carriers are collected before recombining. Additional recombination can occur at defects and interface states. This contribution is especially significant around $\sim$1000 nm.
-\item \textbf{NIR parasitic absorption:} At longer wavelengths, back-surface optical behavior and parasitic pathways become more dominant; beyond roughly 1050 nm, transmitted or parasitically absorbed light contributes strongly to current loss.
-\item \textbf{Front surface escape:} Photons that were back-reflected or scattered may still escape from the front surface rather than being re-absorbed, and this mechanism becomes stronger near the long-wavelength end of the measured spectrum.
-\item \textbf{ARC reflectance:} Reflection at the front interface due to anti-reflection coating (ARC) mismatch contributes to optical loss, with stronger impact in the short-wavelength (UV) region.
-\item \textbf{Blue loss:} This includes front-region recombination effects and ARC-related absorption/mismatch away from optimal design wavelength, and is most visible toward the UV side where absorption depth is shallow.
+\item \textbf{Base collection loss:} This is a combination of two inefficiencies. First, minority carriers have limited diffusion range due to finite lifetime and diffusion coefficient, so not all generated carriers reach the junction before recombining. Second, recombination at the base (including defects and interface states caused by lattice discontinuity) increases carrier loss. This mechanism is most significant around 1000 nm.
+\item \textbf{NIR parasitic absorption:} At longer wavelengths, internal optical trapping becomes weaker, and beyond about 1050 nm transmission/parasitic pathways through the back side rapidly become dominant loss channels.
+\item \textbf{Front surface escape:} Photons that were reflected from the back surface or scattered in the lattice can still escape through the front surface. This becomes significant close to the long-wavelength edge (just below 1200 nm).
+\item \textbf{ARC reflectance:} Reflection of incident light from the front surface due to anti-reflection coating mismatch. This effect is strongest in the ultraviolet region (below about 400 nm).
+\item \textbf{Blue loss:} This combines front-side recombination effects (including finite diffusion length and surface recombination) and ARC absorption/mismatch effects away from the ARC design wavelength. These losses are strongest in the UV where photon penetration depth is shallow.
 \end{enumerate}
 
 \subsection{4.2 EQE differences in regions with different surface properties}
-Region 1 is a textured surface with thicker nitride ARC and is used as the reference. Region 2 is also textured but has a thinner ARC; it tends to improve shorter-wavelength response while reducing near-IR performance, consistent with ARC thickness tuning effects. Region 3 is polished (non-textured), which degrades UV-side performance due to increased optical losses and weaker light trapping, while the near-IR difference versus Region 1 is smaller than in the UV-visible range.
+Region 1 has a textured surface with a thick nitride anti-reflective coating and is used as the baseline for comparison. Region 2 is also textured but has a thinner ARC. It shows relatively better EQE at shorter wavelengths but lower EQE in the near-infrared region. This trend is consistent with ARC thickness tuning: a thinner layer shifts optimal anti-reflection behavior toward shorter wavelengths, with a tradeoff at longer wavelengths.
+
+Region 3 has a polished surface with no texturing. This causes a substantial decline in UV-side performance, where ARC reflectance and blue-loss mechanisms are most significant. Its relative impact in the NIR region is smaller than in the UV-visible range when compared with Region 1.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.95\linewidth]{figures_q3/q3_eqe_comparison.png}
+\caption{EQE versus wavelength for the three regions, shown for full-spectrum and truncated (700 nm long-pass) conditions.}
+\label{fig:q4_eqe_regions}
+\end{figure}
 
 \subsection{4.3 Suitability for perovskite-silicon solar cell}
-For bottom-cell suitability in perovskite-silicon tandem architecture, response above 700 nm is the key metric. In the truncated range, Region 1 gives the strongest performance and the most consistent near-IR response, while Region 2 is least suitable because its relative strength is shifted toward shorter wavelengths that are largely filtered by the top perovskite layer. Region 3 can be attractive from fabrication simplicity, but Region 1 remains the strongest spectral performer in the tandem-relevant window.
+For bottom-cell operation in a perovskite-silicon tandem solar cell, only EQE above 700 nm is directly relevant, as indicated by the truncated curves in Figure~\ref{fig:q4_eqe_regions}. In this range, Region 1 gives the highest efficiency and generally remains about 4\% above Region 3 up to around 1000 nm, with a slightly later long-wavelength roll-off.
+
+Region 3, however, has a simpler surface/coating stack and only a moderate performance penalty relative to Region 1, so it can still be attractive for commercial implementation depending on process cost and complexity constraints.
+
+Region 2 is the least suitable for bottom-cell use in tandem operation because its relative strength is concentrated in shorter wavelengths that are mostly absorbed by the perovskite top cell, while its NIR EQE is significantly lower than both Region 1 and Region 3.

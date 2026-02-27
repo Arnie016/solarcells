@@ -113,24 +113,37 @@ jobs:
                               # Safe fallback: Question 3 extends to end-of-file.
                               end = len(new_text)
                       new_text = new_text[:start] + replacement + "\n" + new_text[end:]
-
-              if new_text != text:
-                  tex.write_text(new_text, encoding="utf-8")
-                  replaced.append(str(tex))
-
-              # Safety restore: if Q3 exists but Q4 is missing, insert Q4 block.
+              # Enforce Question 4 content: replace existing Q4 block if present,
+              # otherwise insert Q4 if Q3 exists.
               has_q3 = re.search(
                   r"\\section\{[^}]*Question\s*\(?3\)?[^}]*\}",
                   new_text,
                   flags=re.IGNORECASE,
               ) is not None
-              has_q4 = re.search(
-                  r"\\section\{[^}]*Question\s*\(?4\)?[^}]*\}|\\subsection\{4\.1",
+              q4_match = re.search(
+                  r"\\section\{[^}]*Question\s*\(?4\)?[^}]*\}",
                   new_text,
                   flags=re.IGNORECASE,
-              ) is not None
+              )
 
-              if has_q3 and not has_q4:
+              if q4_match:
+                  q4_tail = new_text[q4_match.end():]
+                  q4_end = len(new_text)
+                  for pat in (
+                      r"\n\\section\{Question\s*\(?5\)?",
+                      r"\n\\section\{[^}]*Question\s*\(?5\)?",
+                      r"\n\\section\{References",
+                      r"\n\\section\{Bibliography",
+                      r"\n\\printbibliography",
+                      r"\n\\bibliography\{",
+                      r"\n\\end\{document\}",
+                  ):
+                      m = re.search(pat, q4_tail, flags=re.IGNORECASE)
+                      if m:
+                          q4_end = q4_match.end() + m.start()
+                          break
+                  new_text = new_text[:q4_match.start()] + q4_restore + "\n" + new_text[q4_end:]
+              elif has_q3:
                   insert_pos = len(new_text)
                   for pat in (
                       r"\n\\section\{References",
@@ -143,13 +156,12 @@ jobs:
                       if m:
                           insert_pos = m.start()
                           break
-                  restored = new_text[:insert_pos] + "\n\n" + q4_restore + "\n\n" + new_text[insert_pos:]
-                  if restored != new_text:
-                      tex.write_text(restored, encoding="utf-8")
-                      if str(tex) not in replaced:
-                          replaced.append(str(tex))
-                      print(f"Restored Question 4 in {tex}")
-                      new_text = restored
+                  new_text = new_text[:insert_pos] + "\n\n" + q4_restore + "\n\n" + new_text[insert_pos:]
+                  print(f"Inserted Question 4 in {tex}")
+
+              if new_text != text:
+                  tex.write_text(new_text, encoding="utf-8")
+                  replaced.append(str(tex))
 
           if replaced:
               print("Updated files:")
