@@ -77,7 +77,11 @@ jobs:
                   new_text = new_text.replace(marker, replacement, 1)
               else:
                   # Update path: replace existing Question 3 section block.
-                  section_match = re.search(r"\\section\{Question\s*3:[^}]*\}", new_text)
+                  section_match = re.search(
+                      r"\\section\{[^}]*Question\s*\(?3\)?[^}]*\}",
+                      new_text,
+                      flags=re.IGNORECASE,
+                  )
                   if section_match:
                       start = section_match.start()
                       tail = new_text[section_match.end():]
@@ -117,7 +121,9 @@ jobs:
               for path in replaced:
                   print(path)
           else:
-              raise SystemExit("No Question 3 placeholder/section found in any .tex file.")
+              print("No Question 3 heading found. Writing fallback file overleaf_project/Question3_filled.tex")
+              out = Path("overleaf_project/Question3_filled.tex")
+              out.write_text(replacement, encoding="utf-8")
           PY
 
       - name: Sync Question 3 figures into Overleaf project
