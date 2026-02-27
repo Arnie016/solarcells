@@ -60,6 +60,7 @@ jobs:
         run: |
           python3 - << 'PY'
           from pathlib import Path
+          import re
 
           marker = r"\section{Question 3: FILL IN}"
           replacement_path = Path("templates/question3_section.tex")
@@ -69,20 +70,33 @@ jobs:
           replaced = []
           for tex in tex_files:
               text = tex.read_text(encoding="utf-8")
-              if marker in text:
-                  new_text = text.replace(marker, replacement, 1)
-                  if new_text != text:
-                      tex.write_text(new_text, encoding="utf-8")
-                      replaced.append(str(tex))
+              new_text = text
+
+              # First-time insertion path: placeholder exists.
+              if marker in new_text:
+                  new_text = new_text.replace(marker, replacement, 1)
+              else:
+                  # Update path: replace existing Question 3 section block.
+                  section_match = re.search(r"\\section\{Question\s*3:[^}]*\}", new_text)
+                  if section_match:
+                      start = section_match.start()
+                      next_section = re.search(r"\n\\section\{", new_text[section_match.end():])
+                      if next_section:
+                          end = section_match.end() + next_section.start()
+                      else:
+                          end = len(new_text)
+                      new_text = new_text[:start] + replacement + "\n" + new_text[end:]
+
+              if new_text != text:
+                  tex.write_text(new_text, encoding="utf-8")
+                  replaced.append(str(tex))
 
           if replaced:
               print("Updated files:")
               for path in replaced:
                   print(path)
           else:
-              print("No placeholder found. Writing section file to overleaf_project/Question3_filled.tex")
-              out = Path("overleaf_project/Question3_filled.tex")
-              out.write_text(replacement, encoding="utf-8")
+              raise SystemExit("No Question 3 placeholder/section found in any .tex file.")
           PY
 
       - name: Sync Question 3 figures into Overleaf project
