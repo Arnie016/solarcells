@@ -159,6 +159,11 @@ jobs:
                   new_text = new_text[:insert_pos] + "\n\n" + q4_restore + "\n\n" + new_text[insert_pos:]
                   print(f"Inserted Question 4 in {tex}")
 
+              # Compile safety: ensure LaTeX document is properly terminated.
+              if "\\begin{document}" in new_text and "\\end{document}" not in new_text:
+                  new_text = new_text.rstrip() + "\n\n\\end{document}\n"
+                  print(f"Appended missing \\\\end{{document}} in {tex}")
+
               if new_text != text:
                   tex.write_text(new_text, encoding="utf-8")
                   replaced.append(str(tex))
