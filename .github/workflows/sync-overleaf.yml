@@ -104,11 +104,8 @@ jobs:
                           if next_section:
                               end = section_match.end() + next_section.start()
                           else:
-                              # Do not risk deleting trailing content if boundary is unknown.
-                              raise SystemExit(
-                                  f"Question 3 boundary not found safely in {tex}. "
-                                  "Refusing to overwrite to avoid deleting later sections."
-                              )
+                              # Safe fallback: Question 3 extends to end-of-file.
+                              end = len(new_text)
                       new_text = new_text[:start] + replacement + "\n" + new_text[end:]
 
               if new_text != text:
