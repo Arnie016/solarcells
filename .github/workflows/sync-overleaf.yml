@@ -166,6 +166,10 @@ jobs:
                   new_text = new_text.rstrip() + "\n\n\\end{document}\n"
                   print(f"Appended missing \\\\end{{document}} in {tex}")
 
+              # In-text citation normalization to match reference years/names.
+              new_text = new_text.replace("(Pazos-Outón et al., 2018)", "(Pazos-Outon et al., 2016)")
+              new_text = new_text.replace("(Pazos-Outon et al., 2018)", "(Pazos-Outon et al., 2016)")
+
               # Bibliography safety: add a references block if none exists.
               # If a numbered bibliography exists, replace it with the APA-style block.
               numeric_biblio = re.search(
