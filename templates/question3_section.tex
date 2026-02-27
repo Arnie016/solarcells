@@ -1,7 +1,26 @@
 \section{Question 3: Experimental Results and Discussion}
 
-\subsection{Integrated short-circuit current density from EQE}
-The integrated short-circuit current density, $J_{sc}$, was obtained from the measured EQE spectra (300--1200 nm, 10 nm step) using the spreadsheet integral output.
+\subsection{Scope and analysis method}
+This section analyzes the measured spectral response (SR), external quantum efficiency (EQE), and reflectance for Regions R1, R2, and R3. The objective is to quantify photo-current generation and interpret why each region performs differently.
+
+Two EQE datasets were analyzed:
+\begin{itemize}
+\item \textbf{Full-spectrum EQE} (300--1200 nm, no long-pass filter), representing response under broad illumination.
+\item \textbf{Truncated EQE} (with 700 nm long-pass filter), representing the bottom silicon subcell response relevant to perovskite-silicon tandem operation.
+\end{itemize}
+
+The integrated short-circuit current density is obtained from EQE through
+\[
+J_{sc} = q \int EQE(\lambda)\,\Phi_{AM1.5G}(\lambda)\,d\lambda
+\]
+where $\Phi_{AM1.5G}(\lambda)$ is the AM1.5G photon flux. SR and EQE are linked by
+\[
+EQE(\lambda) = SR(\lambda)\,\frac{1240}{\lambda}
+\]
+with $\lambda$ in nm and SR in A/W. Therefore, any trend seen in SR should be physically consistent with the EQE trend.
+
+\subsection{Integrated current results}
+Table~\ref{tab:q3_jsc} summarizes the integrated current density extracted from the measured EQE files.
 
 \begin{table}[h]
 \centering
@@ -18,22 +37,120 @@ R3 & 34.6822 & 17.0999 & 50.70 \\
 \label{tab:q3_jsc}
 \end{table}
 
-From full-spectrum integration, the ranking is R1 $>$ R2 $>$ R3. From truncated (700+ nm) integration, the ranking is R1 $>$ R3 $>$ R2.
-
-\subsection{Spectral response (SR) and EQE results}
-Without the 700 nm long-pass filter, all three regions show strong response across visible to near-IR wavelengths, followed by roll-off near 1000--1200 nm. With the 700 nm long-pass filter, response below 700 nm is suppressed, so the measured response represents bottom silicon subcell behavior in the tandem-relevant range.
-
-Region R1 shows the strongest near-IR response (at 900 nm: EQE $\approx 87.09\%$, SR $\approx 0.632$ A/W), consistent with the highest integrated $J_{sc}$. Region R2 is lower in the 800--1100 nm range (at 900 nm: EQE $\approx 79.08\%$, SR $\approx 0.574$ A/W), resulting in lower integrated current. Region R3 is below R1 in full-spectrum response but slightly above R2 in the truncated case.
-
-\subsection{Reflectance results and correlation with SR/EQE}
-Reflectance trends are consistent with the SR/EQE behavior. Mean reflectance over 300--1100 nm is 3.80\% (R1), 4.23\% (R2), and 9.27\% (R3). R3 shows substantially higher reflectance over broad wavelength ranges, especially in the blue and near-IR, which reduces effective absorption and carrier generation.
-
-Selected reflectance values are:
+Key quantitative outcomes:
 \begin{itemize}
-\item 700 nm: R1 = 1.69\%, R2 = 1.98\%, R3 = 0.69\%
-\item 900 nm: R1 = 3.30\%, R2 = 3.69\%, R3 = 6.22\%
-\item 1100 nm: R1 = 20.50\%, R2 = 20.09\%, R3 = 26.09\%
+\item Full-spectrum ranking: \textbf{R1 $>$ R2 $>$ R3}.
+\item Truncated ranking (700+ nm): \textbf{R1 $>$ R3 $>$ R2}.
+\item The long-pass condition reduces current by about 51--55\% for all three regions, consistent with removal of blue-visible photon contribution below 700 nm.
 \end{itemize}
 
-\subsection{Summary}
-Based on measured SR, EQE, and reflectance data, Region R1 provides the strongest spectral current generation performance in this experiment and gives the highest integrated $J_{sc}$ for both full-spectrum and tandem-relevant (700--1200 nm) analysis.
+These results already indicate that Region R1 is the strongest performer in terms of total generated current, and that Region R2 loses more useful near-IR collection than Region R3 in the truncated case.
+
+\subsection{EQE behavior and interpretation}
+Figure~\ref{fig:q3_eqe} compares EQE for all regions with and without the 700 nm filter.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_q3/q3_eqe_comparison.png}
+\caption{Measured EQE spectra for R1, R2, and R3 without (left) and with (right) the 700 nm long-pass filter.}
+\label{fig:q3_eqe}
+\end{figure}
+
+The EQE curves can be interpreted in three wavelength zones:
+\begin{itemize}
+\item \textbf{300--450 nm (short wavelength):} R3 is much lower than R1/R2 in the no-filter case, indicating stronger front-surface optical loss or shallower carrier collection effectiveness in that region.
+\item \textbf{450--900 nm (plateau region):} All regions are high, but R1 stays consistently highest. This produces a larger area under the EQE curve and directly contributes to higher integrated $J_{sc}$.
+\item \textbf{900--1100 nm (near band-edge region):} All curves decline, but the decline is steepest for R2 and R3. R1 maintains stronger response deeper into near-IR, indicating better long-wavelength collection.
+\end{itemize}
+
+At representative wavelengths:
+\begin{itemize}
+\item 700 nm EQE: R1 = 96.15\%, R2 = 93.88\%, R3 = 94.15\%.
+\item 900 nm EQE: R1 = 87.09\%, R2 = 79.08\%, R3 = 83.20\%.
+\item 1100 nm EQE: R1 = 36.11\%, R2 = 27.74\%, R3 = 26.87\%.
+\end{itemize}
+
+With long-pass filtering, sub-700 nm response is correctly suppressed and near-IR differences remain. This confirms that the R1 advantage is not only due to visible response; R1 is also stronger in the tandem-relevant near-IR regime.
+
+\subsection{SR behavior and physical consistency}
+Figure~\ref{fig:q3_sr} shows SR trends for the same conditions.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\linewidth]{figures_q3/q3_sr_comparison.png}
+\caption{Measured SR spectra for R1, R2, and R3 without (left) and with (right) the 700 nm long-pass filter.}
+\label{fig:q3_sr}
+\end{figure}
+
+The SR curves mirror the EQE observations:
+\begin{itemize}
+\item R1 provides the highest peak SR and stronger long-wavelength response.
+\item R2 is lowest in the near-IR range where bottom-cell current is critical.
+\item R3 is intermediate: generally lower than R1, but less degraded than R2 under truncated conditions.
+\end{itemize}
+
+Representative SR values:
+\begin{itemize}
+\item 700 nm SR: R1 = 0.543 A/W, R2 = 0.530 A/W, R3 = 0.532 A/W.
+\item 900 nm SR: R1 = 0.632 A/W, R2 = 0.574 A/W, R3 = 0.604 A/W.
+\item 1100 nm SR: R1 = 0.320 A/W, R2 = 0.246 A/W, R3 = 0.238 A/W.
+\end{itemize}
+
+Because SR and EQE are analytically linked, this agreement increases confidence that the measured trends are real device behavior rather than plotting artifacts.
+
+\subsection{Reflectance-driven optical loss analysis}
+Figure~\ref{fig:q3_reflectance} presents reflectance for all regions.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.92\linewidth]{figures_q3/q3_reflectance_comparison.png}
+\caption{Measured reflectance spectra for R1, R2, and R3.}
+\label{fig:q3_reflectance}
+\end{figure}
+
+Mean reflectance over 300--1100 nm is:
+\begin{itemize}
+\item R1: 3.80\%
+\item R2: 4.23\%
+\item R3: 9.27\%
+\end{itemize}
+
+Important observations and their implications:
+\begin{itemize}
+\item \textbf{R3 has very high short-wavelength reflectance} (approximately 350--450 nm), which strongly reduces blue photon entry and explains R3's weak short-wavelength EQE.
+\item \textbf{R3 reflectance rises more strongly near 900--1100 nm} than R1/R2, which is consistent with lower long-wavelength EQE near the band-edge.
+\item \textbf{R1 maintains lower reflectance across most of the useful range}, supporting superior absorption and therefore higher generated current.
+\end{itemize}
+
+Selected reflectance values:
+\begin{itemize}
+\item 700 nm: R1 = 1.69\%, R2 = 1.98\%, R3 = 0.69\%.
+\item 900 nm: R1 = 3.30\%, R2 = 3.69\%, R3 = 6.22\%.
+\item 1100 nm: R1 = 20.50\%, R2 = 20.09\%, R3 = 26.09\%.
+\end{itemize}
+
+Although R3 is low at 700 nm, its broader high-reflectance behavior at short and very long wavelengths is more detrimental overall, which is why its integrated current remains below R1.
+
+\subsection{Cross-comparison and engineering interpretation}
+To connect optical and electrical behavior:
+\begin{itemize}
+\item R1 combines low-to-moderate reflectance with the strongest EQE/SR across the middle and near-IR range, producing the largest integrated current.
+\item R2 has reflectance close to R1 in many regions but weaker near-IR EQE/SR, suggesting additional collection losses (for example base-related or long-wavelength collection limits) rather than purely front optical loss.
+\item R3 shows a mixed profile: optical penalties in blue and near band-edge are strong, but truncated near-IR current is still slightly better than R2 due to less severe 700--1000 nm degradation than R2.
+\end{itemize}
+
+For tandem relevance, the 700+ nm ranking matters most for the silicon bottom subcell. In this metric, R1 remains best, R3 is second, and R2 is last.
+
+\subsection{Data quality, limitations, and uncertainty}
+The analysis is based on 10 nm sampling from 300 to 1200 nm and direct instrument/software outputs for SR, EQE, and reflectance. The conclusions are robust at ranking level (R1 consistently best), but the following limitations should be acknowledged:
+\begin{itemize}
+\item 10 nm step size smooths fine spectral features.
+\item Integration depends on calibration quality and reference detector stability.
+\item Region-to-region comparison assumes consistent probe contact and measurement alignment.
+\item The long-pass filter introduces an abrupt cutoff near 700 nm, so values close to cutoff should be interpreted with care.
+\end{itemize}
+
+These do not change the primary conclusion because the observed differences are systematic and repeated across multiple metrics (EQE, SR, and integrated $J_{sc}$).
+
+\subsection{Conclusion for Question 3}
+Question 3 requires quantitative integration of current and discussion of SR/reflectance behavior. Both are satisfied by the measured data. Region R1 delivers the highest full-spectrum and truncated integrated current density, with stronger near-IR EQE/SR and favorable reflectance profile across most of the spectrum. Region R2 is limited primarily by weaker near-IR collection, while Region R3 is limited by broader optical reflectance losses despite competitive truncated performance versus R2. Therefore, based on Question 3 evidence alone, \textbf{Region R1 is the best-performing region for spectral current generation and is the strongest candidate for tandem-relevant bottom-cell operation.}

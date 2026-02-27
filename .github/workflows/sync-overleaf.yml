@@ -85,6 +85,11 @@ jobs:
               out.write_text(replacement, encoding="utf-8")
           PY
 
+      - name: Sync Question 3 figures into Overleaf project
+        run: |
+          mkdir -p overleaf_project/figures_q3
+          cp -f templates/figures/*.png overleaf_project/figures_q3/
+
       - name: Commit and push to Overleaf
         env:
           OVERLEAF_TOKEN: ${{ secrets.OVERLEAF_TOKEN }}
